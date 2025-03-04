@@ -13,18 +13,17 @@ canvas{
 #canvas{
   outline: 5px solid white;
   background-color: black;
+  
+  image-rendering: pixelated;
 }
 
 .layerSelected{
   outline: 5px solid cyan;
 }
+.buttonCont{
+  padding: 5px;
+}
 
-#alphaMap{
-  display: none;
-}
-#colorMap{
-  display: none;
-}
-#lightMap{
+#alphaMap, #alphaOutline, #colorMap, #lightMap{
   display: none;
 }
