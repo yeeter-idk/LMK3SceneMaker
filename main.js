@@ -2,57 +2,36 @@ let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 
 let alphaMap = new layer("alphaMap")
+let alphaOutline = new layer("alphaOutline")
 let colorMap = new layer("colorMap")
 let lightMap = new layer("lightMap")
 
 setCanvSize()
 
 let canvasChanged = false
+let curLayer = alphaMap
 
 function updateCanvasImage() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.clearRect(0, 0, canvas.width, canvas.height) 
   ctx.drawImage(curLayer.canvas, 0, 0)
   
   if(curLayer.id != alphaMap.id){
     ctx.globalCompositeOperation = "multiply"
     ctx.drawImage(alphaMap.canvas, 0, 0)
     ctx.globalCompositeOperation = "source-over"
-  } 
-}
-
-let curLayer = alphaMap
-
-let pen = {
-  color: "#000000",
-  pos: {x: 0, y: 0},
-  lastPos: {x: 0, y: 0},
-  radius: 10,
-  draw: function() {
-    let ctx = curLayer.ctx
-    
-    ctx.fillStyle = this.color
-    ctx.strokeStyle = this.color
-    ctx.lineWidth = this.radius*2
-    
-    ctx.beginPath()
-    ctx.moveTo(this.lastPos.x, this.lastPos.y)
-    ctx.lineTo(this.pos.x, this.pos.y)
-    ctx.stroke()  
-    
-    ctx.beginPath()
-    ctx.arc(this.lastPos.x, this.lastPos.y, this.radius, 0, Math.PI*2)
-    ctx.fill() 
-     
-    canvasChanged = true
+    ctx.drawImage(alphaOutline.canvas, 0, 0)
   }
 }
 
+let frame = 0
 loop()
 function loop() {
   if(canvasChanged){
     updateCanvasImage()
     canvasChanged = false
   }
+   
+  frame++
   window.requestAnimationFrame(loop)
 }
 
@@ -67,8 +46,47 @@ function fixAlpha() {
     data[i] = data[i + 1] = data[i + 2] = bwValue;
   }
 
-  ctx.putImageData(imageData, 0, 0);
+  ctx.putImageData(imageData, 0, 0);  
+  createAlphaOutline()
   canvasChanged = true
+}
+
+function createAlphaOutline() {
+  let ctx = alphaOutline.ctx;
+  let width = alphaMap.canvas.width
+  let height = alphaMap.canvas.height
+  
+  let imageData = ctx.createImageData(width, height);
+  let data = imageData.data;
+  
+  let alphaData = alphaMap.ctx.getImageData(0, 0, width, height).data
+  
+  function getAlphaPixel(x, y) {
+    return alphaData[(x+y*width)*4]
+  }
+  
+  for (let i = 0; i < data.length; i += 4) {
+    let index = i/4
+    let x = index%width
+    let y = Math.floor(index/width)
+    
+    if(alphaData[i] == 255) continue
+    
+    let edge = false
+    if(getAlphaPixel(x, y-1) == 255){
+      edge = true
+    }else if(getAlphaPixel(x+1, y) == 255){
+      edge = true
+    }else if(getAlphaPixel(x, y+1) == 255){ 
+      edge = true
+    }else if(getAlphaPixel(x-1, y) == 255){
+      edge = true
+    }
+    
+    if(edge) data[i] = data[i + 1] = data[i + 2]  = data[i + 3] = 255;
+  }
+
+  ctx.putImageData(imageData, 0, 0)
 }
 
 function transferLayerFocus(layerName) {
