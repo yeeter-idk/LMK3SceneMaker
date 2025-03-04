@@ -28,6 +28,8 @@ let pen = {
         this.drawBox(false)
         break
     }
+
+    this.startPos = this.pos
     
     canvasChanged = true
   },
