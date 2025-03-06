@@ -8,16 +8,21 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <input type="color" id="colorPicker"><input type="range" id="brushSize" min="0.5" value="10"><br>
+  <input type="color" id="colorPicker" value="#ffffff"><input type="range" id="brushSize" min="0.5" value="10"><br>
   <select id="penType">
     <option value="pen">Pen</option>
-    <option value="box">Box</option>    
+    <option value="box">Box</option>   
+    <option value="line">Line</option> 
+    <option value="spray">Spray</option> 
   </select>
   <div class="buttonCont">
     <button id="btnAlpha" onclick="transferLayerFocus('alpha')" class="layerSelected">Alpha</button>
     <button id="btnColor" onclick="transferLayerFocus('color')">Color</button>
     <button id="btnLight" onclick="transferLayerFocus('light')">Light</button>
   </div>
+  
+  Outline: <input type="checkbox" id="showOutline" checked="true"><br>
+  
   Width: <input type="number" id="canvasWidth" value="300"><br>
   Height: <input type="number" id="canvasHeight" value="300"><br>
   <button onclick="download()">Download</button>

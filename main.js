@@ -19,7 +19,9 @@ function updateCanvasImage() {
     ctx.globalCompositeOperation = "multiply"
     ctx.drawImage(alphaMap.canvas, 0, 0)
     ctx.globalCompositeOperation = "source-over"
-    ctx.drawImage(alphaOutline.canvas, 0, 0)
+    
+    if(document.getElementById("showOutline").checked)
+      ctx.drawImage(alphaOutline.canvas, 0, 0)
   }
 }
 

@@ -18,7 +18,7 @@ canvas{
 }
 
 .layerSelected{
-  outline: 5px solid cyan;
+  outline: 5px solid white;
 }
 .buttonCont{
   padding: 5px;

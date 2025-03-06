@@ -1,6 +1,6 @@
 let pen = {
   isDrawing: false,
-  color: "#000000",
+  color: "#ffffff",
   pos: {x: 0, y: 0},
   startPos: {x: 0, y: 0},
   lastPos: {x: 0, y: 0},
@@ -16,6 +16,12 @@ let pen = {
       case "box":
         this.drawBox(true)
         break
+      case "line":
+        this.drawLine(true)
+        break
+      case "spray":
+        this.drawSpray()
+        break
     }
     
     //canvasChanged = true
@@ -27,11 +33,30 @@ let pen = {
       case "box":
         this.drawBox(false)
         break
+      case "line":
+        this.drawLine(false)
+        break
+      case "spray":
+        break
     }
-
+    
     this.startPos = this.pos
     
     canvasChanged = true
+  },
+  drawSpray: function() {
+    let ctx = curLayer.ctx      
+    ctx.fillStyle = this.color
+    for(let i = 0; i<50; i++){
+      let angle = Math.random() * Math.PI * 2
+    
+      let dist = Math.random()*Math.random() * this.radius
+    
+      let x = Math.floor(this.pos.x + Math.sin(angle) * dist)
+      let y = Math.floor(this.pos.y + Math.cos(angle) * dist)
+    
+      ctx.fillRect(x, y, 1, 1)
+    }
   },
   drawBox: function(preview){
     let x = Math.floor(Math.min(this.startPos.x, this.pos.x))
@@ -43,13 +68,39 @@ let pen = {
       ctx.globalCompositeOperation = "difference"
       ctx.strokeStyle = "white"
   
-      ctx.strokeRect(x, y, w, h)      
+      ctx.strokeRect(x+0.5, y+0.5, w, h)      
       ctx.globalCompositeOperation = "source-over"
     }else{
       let ctx = curLayer.ctx
            
       ctx.fillStyle = this.color
       ctx.fillRect(x, y, w, h)  
+    }
+  },
+  drawLine: function(preview){
+    if(preview){
+      ctx.globalCompositeOperation = "difference"
+      ctx.strokeStyle = "white"
+  
+      ctx.lineWidth = this.radius*2
+  
+      ctx.beginPath()
+      ctx.moveTo(this.startPos.x, this.startPos.y)
+      ctx.lineTo(this.pos.x, this.pos.y)
+      ctx.stroke()
+      
+      ctx.lineWidth = 1
+      ctx.globalCompositeOperation = "source-over"
+    }else{
+      let ctx = curLayer.ctx
+           
+      ctx.strokeStyle = this.color
+      ctx.lineWidth = this.radius*2
+  
+      ctx.beginPath()
+      ctx.moveTo(this.startPos.x, this.startPos.y)
+      ctx.lineTo(this.pos.x, this.pos.y)
+      ctx.stroke()      
     }
   },
   drawPen: function() {
