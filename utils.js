@@ -37,7 +37,7 @@ canvas.addEventListener("touchend", (e)=>{endDraw(e)})
 canvas.addEventListener("mousedown", (e)=>{startDraw(e)})
 canvas.addEventListener("mousemove", (e)=>{moveDraw(e)})
 canvas.addEventListener("mouseup", (e)=>{endDraw(e)})
-canvas.addEventListener("mouseleave", (e)=>{endDraw(e)})
+//canvas.addEventListener("mouseleave", (e)=>{endDraw(e)})
 
 function startDraw(e) {
   e.preventDefault();
@@ -118,4 +118,8 @@ document.getElementById("brushSize").addEventListener("input", () => {
 
 document.getElementById("penType").addEventListener("change", () => {
   pen.drawType = document.getElementById("penType").value;
+});
+
+document.getElementById("showOutline").addEventListener("change", () => {
+  canvasChanged = true
 });
