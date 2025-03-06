@@ -127,10 +127,15 @@ function download() {
     ctx.clearRect(0, 0, c.width, c.height);
 
     // Draw maps side by side
-    ctx.drawImage(alphaMap.canvas, 0, 0); // Left (Alpha)
-    ctx.drawImage(colorMap.canvas, mapWidth, 0); // Middle (Color)
-    ctx.drawImage(lightMap.canvas, mapWidth * 2, 0); // Right (Light)
-
+    ctx.drawImage(alphaMap.canvas, 0, 0);
+    ctx.drawImage(colorMap.canvas, mapWidth, 0);
+    ctx.drawImage(lightMap.canvas, mapWidth * 2, 0);
+    
+    ctx.globalCompositeOperation = "multiply"
+    ctx.drawImage(alphaMap.canvas, mapWidth, 0);
+    ctx.drawImage(alphaMap.canvas, mapWidth * 2, 0);
+    ctx.globalCompositeOperation = "source-over"
+    
     // Convert to image and trigger download
     c.toBlob((blob) => {
       if (!blob) {
