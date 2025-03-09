@@ -17,6 +17,10 @@ canvas{
   image-rendering: pixelated;
 }
 
+#brushSize{
+  width: 50%;
+}
+
 .layerSelected{
   outline: 5px solid white;
 }

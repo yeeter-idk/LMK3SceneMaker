@@ -1,5 +1,5 @@
 let canvas = document.getElementById("canvas")
-let ctx = canvas.getContext("2d")
+let ctx = canvas.getContext("2d", {willReadFrequently: true})
 
 let alphaMap = new layer("alphaMap")
 let alphaOutline = new layer("alphaOutline")
@@ -22,6 +22,32 @@ function updateCanvasImage() {
     
     if(document.getElementById("showOutline").checked)
       ctx.drawImage(alphaOutline.canvas, 0, 0)
+  }
+  
+  if(pen.drawType == "pixel"){
+    let size = pen.radius * 2
+    
+    let width = canvas.width
+    let height = canvas.height  
+    
+    let imageData = ctx.getImageData(0, 0, width, height);
+    let data = imageData.data;
+    
+    function guideColor(value) {
+      return (255-value) * 0.8 + value * 0.2
+    }
+    
+    for(let x = 0; x<width; x += size){
+      for(let y = 0; y<height; y += size){
+        let index = x + y * width
+        data[index*4] = guideColor(data[index*4])
+        data[index*4+1] = guideColor(data[index*4+1])
+        data[index*4+2] = guideColor(data[index*4+2])
+        data[index*4+3] = 255       
+      }
+    }
+    
+    ctx.putImageData(imageData, 0, 0)
   }
 }
 
