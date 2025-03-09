@@ -22,6 +22,9 @@ let pen = {
       case "spray":
         this.drawSpray()
         break
+      case "pixel":
+        this.drawPixel()
+        break
     }
     
     //canvasChanged = true
@@ -38,11 +41,24 @@ let pen = {
         break
       case "spray":
         break
+      case "pixel":
+        break
     }
     
     this.startPos = this.pos
     
     canvasChanged = true
+  },
+  drawPixel: function() {
+    let ctx = curLayer.ctx      
+    ctx.fillStyle = this.color
+    
+    let size = this.radius * 2
+    
+    let x = Math.floor(this.pos.x / size) * size
+    let y = Math.floor(this.pos.y / size) * size
+    
+    ctx.fillRect(x, y, size, size)
   },
   drawSpray: function() {
     let ctx = curLayer.ctx      
