@@ -33,11 +33,12 @@ document.getElementById("canvasHeight").addEventListener("change", setCanvSize)
 canvas.addEventListener("touchstart", (e)=>{startDraw(e)})
 canvas.addEventListener("touchmove", (e)=>{moveDraw(e)})
 canvas.addEventListener("touchend", (e)=>{endDraw(e)})
+canvas.addEventListener("touchcancel", ()=>{cancelDraw()})
 
 canvas.addEventListener("mousedown", (e)=>{startDraw(e)})
 canvas.addEventListener("mousemove", (e)=>{moveDraw(e)})
 canvas.addEventListener("mouseup", (e)=>{endDraw(e)})
-//canvas.addEventListener("mouseleave", (e)=>{endDraw(e)})
+canvas.addEventListener("mouseleave", ()=>{cancelDraw()})
 
 function startDraw(e) {
   e.preventDefault();
@@ -71,7 +72,13 @@ function endDraw(e) {
   
   pen.endDraw()
   
-  if (curLayer.id === "alphaMap") fixAlpha();
+  if (curLayer.id === "alphaMap") fixAlpha()
+}
+
+function cancelDraw() {
+  pen.isDrawing = false
+  
+  if (curLayer.id === "alphaMap") fixAlpha()
 }
 
 function getCanvasRelativePosition(event) {
@@ -103,6 +110,10 @@ document.getElementById("colorPicker").addEventListener("change", () => {
 // Brush size change event
 document.getElementById("brushSize").addEventListener("input", () => {
   pen.radius = parseFloat(document.getElementById("brushSize").value);
+  
+  if(pen.radius > 1) pen.radius = Math.floor(pen.radius)
+  
+  document.getElementById("brushSizeDisplay").innerText = `Radius: ${pen.radius} - Diameter: ${pen.radius*2}`
   
   updateCanvasImage()
   
