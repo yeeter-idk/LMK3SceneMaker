@@ -40,6 +40,31 @@ canvas.addEventListener("mousemove", (e)=>{moveDraw(e)})
 canvas.addEventListener("mouseup", (e)=>{endDraw(e)})
 canvas.addEventListener("mouseleave", ()=>{cancelDraw()})
 
+document.getElementById("image").addEventListener("input", (e) => {
+  let referenceImage = new Image();
+  const selectedFile = event.target.files[0];
+  
+  if (selectedFile) {
+    if (selectedFile.type.startsWith('image/')) {
+      const reader = new FileReader();
+          
+      reader.onload = (e) => {
+        referenceImage = new Image();
+        referenceImage.onload = () => {
+          curLayer.ctx.drawImage(referenceImage, 0, 0, curLayer.canvas.width, curLayer.canvas.height);
+          canvasChanged = true;
+        };
+
+        referenceImage.src = e.target.result;
+      };
+
+      reader.readAsDataURL(selectedFile);
+    } else {
+      alert('Selected file is not an image.');
+    }
+  }
+});
+
 function startDraw(e) {
   e.preventDefault();
 
@@ -129,8 +154,13 @@ document.getElementById("brushSize").addEventListener("input", () => {
 
 document.getElementById("penType").addEventListener("change", () => {
   pen.drawType = document.getElementById("penType").value;
+  canvasChanged = true
 });
 
 document.getElementById("showOutline").addEventListener("change", () => {
   canvasChanged = true
 });
+
+function distance(ax, ay, bx, by) {
+  return Math.sqrt((ax-bx)**2 + (ay-by)**2)
+}

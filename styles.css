@@ -4,6 +4,7 @@ html, body{
   height: 100%;
   background-color: #090909;
   color: white;
+  font-family: arial;
 }
 
 canvas{

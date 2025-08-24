@@ -1,6 +1,8 @@
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d", {willReadFrequently: true})
 
+let imageFileElem = document.getElementById("image");
+
 let alphaMap = new layer("alphaMap")
 let alphaOutline = new layer("alphaOutline")
 let colorMap = new layer("colorMap")

@@ -55,10 +55,18 @@ let pen = {
     
     let size = this.radius * 2
     
-    let x = Math.floor(this.pos.x / size) * size
-    let y = Math.floor(this.pos.y / size) * size
+    let dist = Math.max(distance(this.pos.x, this.pos.y, this.lastPos.x, this.lastPos.y), size)
     
-    ctx.fillRect(x, y, size, size)
+    for(let i = 0; i<dist; i += size){  
+      let t = i / dist
+      let lx = this.pos.x + (t * (this.lastPos.x - this.pos.x))
+      let ly = this.pos.y + (t * (this.lastPos.y - this.pos.y))
+        
+      let x = Math.floor(lx / size) * size
+      let y = Math.floor(ly / size) * size
+    
+      ctx.fillRect(x, y, size, size)
+    }
   },
   drawSpray: function() {
     let ctx = curLayer.ctx      
